@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Manga Update Alert</title>
+    <script src="popup.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            width: 350px;
+            padding: 15px;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .tab:hover {
+            background: #e0e0e0;
+        }
+        .tab.active {
+            background: #2c5aa0;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .tab-content {
+            display: none;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2c5aa0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #1e3d6b;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        li {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        li:hover {
+            background: #f9f9f9;
+        }
+        .manga-thumb {
+            width: 80px;
+            height: 110px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .manga-info {
+            flex: 1;
+            text-align: left;
+        }
+        .manga-info strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .manga-info span {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        .status-value,
+        .chapter-value,
+        .updated-value {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+        .read-btn {
+            display: inline-block;
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 8px;
+            padding: 5px 10px;
+            border: 1px solid #2c5aa0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .read-btn:hover {
+            color: #fff;
+            background: #2c5aa0;
+            text-decoration: none;
+        }
+        .add-btn, .remove-btn {
+            cursor: pointer;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 0 15px;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .add-btn {
+            color: #2ecc71;
+        }
+        .add-btn:hover {
+            color: #27ae60;
+        }
+        .remove-btn {
+            color: #e74c3c;
+        }
+        .remove-btn:hover {
+            color: #c0392b;
+        }
+        .toast {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 5px;
+            display: none;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        
+        /* Hiệu ứng slide-out */
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+        
+        .slide-out {
+            animation: slideOutLeft 0.3s forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <div class="tab" data-tab="search">Tìm kiếm</div>
+        <div class="tab active" data-tab="watchlist">Theo dõi</div>
+    </div>
+    
+    <div id="search" class="tab-content">
+        <input type="text" id="searchBox" placeholder="Nhập tên truyện...">
+        <button id="searchBtn">Tìm kiếm</button>
+        <ul id="resultList"></ul>
+    </div>
+    
+    <div id="watchlist" class="tab-content active">
+        <ul id="watchList"></ul>
+    </div>
+
+    <div id="toast" class="toast"></div>
+</body>
+</html>

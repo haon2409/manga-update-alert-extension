@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Manga Update Alert",
+  "version": "1.0",
+  "description": "Theo dõi cập nhật manga",
+  "icons": {
+    "64": "icon64.png"
+  },
+  "permissions": ["storage", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
